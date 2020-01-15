@@ -1,0 +1,101 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <div class="md-form">
+        <input type="text" class="form-control" [(ngModel)]="searchText" (keyup)="searchItems()"
+               id="search-input"
+               mdbInput>
+        <label for="search-input">Search</label>
+      </div>
+      <div class="md-form">
+        <button (click)="downloadFile(elements)">Descargar Excel</button>
+      </div>
+    </div>
+    <table mdbTable #tableEl="mdbTable" stickyHeader="true" hover="true" striped="true" class="z-depth-1">
+      <thead class="sticky-top">
+      <tr>
+        <th *ngFor="let head of headElements; let i = index" [mdbTableSort]="elements"
+            [sortBy]="headElements[i]"
+            scope="col">{{head | titlecase}}
+          <mdb-icon fas icon="sort"></mdb-icon>
+        </th>
+      </tr>
+      </thead>
+      <tbody #row *ngFor="let el of elements; let i = index">
+      <tr mdbTableCol (rowCreated)="onRowCreate($event)" (rowRemoved)="onRowRemove($event)">
+        <th *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i <  mdbTablePagination.lastItemIndex"
+            scope="row">
+            <button
+            type="button"
+            mdbBtn
+            color="danger"
+            class="master-button"
+            mdbWavesEffect
+            *ngIf="el.collapsed"
+            (click)="el.collapsed = !el.collapsed"
+          >
+            <mdb-icon fas icon="angle-down"></mdb-icon>
+          </button>
+          <button
+            type="button"
+            mdbBtn
+            color="success"
+            class="master-button"
+            mdbWavesEffect
+            *ngIf="!el.collapsed"
+            (click)="el.collapsed = !el.collapsed"
+          >
+            <mdb-icon fas icon="angle-right"></mdb-icon>
+          </button>
+            <span>{{el.id}}</span>
+        </th>
+        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i <  mdbTablePagination.lastItemIndex"
+            class="red-text">{{el.first}}
+        </td>
+        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i <  mdbTablePagination.lastItemIndex">
+          {{el.last}}
+        </td>
+        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i <  mdbTablePagination.lastItemIndex">
+          {{el.handle}}
+        </td>
+
+    </tr>
+    <!--Collapse-->
+<tr
+*ngIf="el.collapsed"
+style="text-align: center; background-color: rgba(0, 0, 0,  0.015)">
+<td colspan="100%" style="border: 0 !important">
+  <table mdbTable>
+    <thead class="black white-text">
+      <tr>
+        <th *ngFor="let head of masterHeadElements" scope="col">{{ head }}</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let detail of el.masterDetail">
+      <tr>
+        <td>{{ detail.orderId }}</td>
+        <td>{{ detail.orderDate }}</td>
+        <td>{{ detail.adress }}</td>
+      </tr>
+    </tbody>
+  </table>
+</td>
+</tr>
+
+
+
+
+
+      </tbody>
+      <tfoot class="grey lighten-5 w-100">
+
+      <tr>
+        <td colspan="4">
+          <mdb-table-pagination [tableEl]="tableEl" paginationAlign=""
+                                [searchDataSource]="elements"></mdb-table-pagination>
+        </td>
+      </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
